@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script>
+        async function createPage() {
+            const pageParams = new URLSearchParams(window.location.search);
+            // const a = location.href; 
+            // const b = a.substring(a.indexOf("?")+1);
+            const response = await fetch(`https://gorest.co.in/public-api/posts/${pageParams}`);
+            const obj = await response.json();
+            const commit = await fetch(`https://gorest.co.in/public-api/comments?post_id=${pageParams}`);
+            const commitObj = await commit.json();
+            const commitObjData = commitObj.data;
+            console.log(commitObj)
+            let title = document.createElement('h1');
+            let text = document.createElement('p');
+            let commitName = document.createElement('div')
+            commitName.textContent = commitObj.data.name;
+            title.textContent = obj.data.title;
+            text.textContent =obj.data.body;
+            document.body.append(title)
+            document.body.append(text)
+            for(let i = 0; i<commitObjData.length;i++) {
+                let commitName = document.createElement('div')
+                commitName.textContent = commitObjData[i].body + commitObjData[i].name + commitObjData[i].email;
+                document.body.append(commitName)
+            }
+            console.log(pageParams)
+        }
+        createPage()
+    </script>
+    
+</body>
+</html>
